@@ -1,0 +1,3 @@
+interface:
+  display_name: "规范语料标题规范化"
+  short_description: "统一规范 Markdown 的章节标题标记并校验结构"
