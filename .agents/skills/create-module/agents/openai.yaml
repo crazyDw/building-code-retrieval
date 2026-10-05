@@ -1,0 +1,3 @@
+interface:
+  display_name: "新增业务模块"
+  short_description: "在 project/src 下新增模块的边界、命名与验证约定"

@@ -1,0 +1,36 @@
+# ── Python ──
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.venv/
+venv/
+
+# ── 工具缓存 ──
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# ── 密钥与本地配置 ──
+.env
+
+# ── 运行期数据（可由语料重建，不入库）──
+data/
+logs/
+volumes/
+milvus/
+*.sqlite
+*.sqlite-wal
+*.sqlite-shm
+*.db
+*.db-wal
+*.db-shm
+
+# ── IDE ──
+.idea/
+.vscode/
+
+# 注意：数据库上传资料/ 是语料源（唯一），必须入库，不要加入忽略。

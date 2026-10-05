@@ -1,0 +1,21 @@
+# 项目级 Codex 配置：仅在仓库被信任后加载。
+# 项目级不能覆盖 provider / notify / profile(s) / otel 等键，那些留在用户级配置里。
+# 本文件只写本机实测存在的键，避免写入无效配置。
+
+# ── 沙箱与审批 ──
+sandbox_mode = "workspace-write"
+approval_policy = "on-request"
+
+[sandbox_workspace_write]
+# 需要联网安装依赖、拉取嵌入与重排模型
+network_access = true
+
+# ── 子代理 ──
+[agents]
+# 可同时派生的子代理线程上限（不含主线程）
+max_concurrent_threads_per_session = 4
+
+# 模型与推理强度不在项目级固定，沿用用户级配置。
+# 如需在本仓库固定，取消注释并按可用模型填写：
+# model = "<模型名>"
+# model_reasoning_effort = "high"

@@ -1,0 +1,11 @@
+# 统一以 LF 存储与检出：语料源的行尾有明确约定（见《规范文件修改记录》），
+# 不允许被平台自动转换。二进制文件显式声明，避免被当作文本处理。
+* text=auto eol=lf
+
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.pdf binary
+*.sqlite binary
+*.db binary

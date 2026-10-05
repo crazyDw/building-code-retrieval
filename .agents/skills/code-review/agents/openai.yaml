@@ -1,0 +1,3 @@
+interface:
+  display_name: "代码审查"
+  short_description: "按项目铁律审查改动，输出按严重程度排序的发现清单"

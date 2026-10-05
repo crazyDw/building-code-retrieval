@@ -1,0 +1,3 @@
+interface:
+  display_name: "新增测试"
+  short_description: "在 project/tests 下新增 pytest 用例的组织与断言要求"
