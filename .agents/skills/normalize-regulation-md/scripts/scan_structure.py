@@ -51,7 +51,8 @@ def iter_files(targets):
 
 
 def report(path):
-    raw = open(path, encoding="utf-8").read()
+    with open(path, encoding="utf-8") as handle:
+        raw = handle.read()
     lines = raw.split("\n")
     toc, body = toc_range(lines)
     ch = se = ku = xi = 0
@@ -87,17 +88,18 @@ def report(path):
     for k in range(1, len(nums)):
         a, b, c = nums[k - 1]
         A, B, C = nums[k]
-        if (A, B) == (a, b):
-            ok = C == c + 1
-        elif A == a and B == b + 1:
+        if (a, b) == (A, B):
+            ok = c + 1 == C
+        elif a == A and b + 1 == B:
             ok = C == 1
         else:
-            ok = A == a + 1 and C == 1
+            ok = a + 1 == A and C == 1
         if not ok:
-            gaps.append("%d.%d.%d->%d.%d.%d" % (a, b, c, A, B, C))
+            gaps.append(f"{a}.{b}.{c}->{A}.{B}.{C}")
 
-    return dict(ch=ch, se=se, cl=len(nums), ku=ku, xi=xi,
-                issues=issues, gaps=gaps, body=body + 1)
+    return dict(
+        ch=ch, se=se, cl=len(nums), ku=ku, xi=xi, issues=issues, gaps=gaps, body=body + 1
+    )
 
 
 def main(argv):
@@ -108,25 +110,27 @@ def main(argv):
         found = True
         r = report(path)
         print("=" * 62)
-        print("%s   (正文起始 行%d)" % (os.path.basename(path), r["body"]))
-        print("  章 %d  节 %d  条 %d  款 %d  项 %d    标记异常 %d  条号缺口 %d"
-              % (r["ch"], r["se"], r["cl"], r["ku"], r["xi"],
-                 len(r["issues"]), len(r["gaps"])))
+        print(f"{os.path.basename(path)}   (正文起始 行{r['body']})")
+        print(
+            f"  章 {r['ch']}  节 {r['se']}  条 {r['cl']}  款 {r['ku']}  项 {r['xi']}"
+            f"    标记异常 {len(r['issues'])}  条号缺口 {len(r['gaps'])}"
+        )
         for ln, kind, text in r["issues"]:
-            print("    !! L%-5d %s: %s" % (ln, kind, text))
+            print(f"    !! L{ln:<5d} {kind}: {text}")
         for g in r["gaps"]:
-            print("    !! 条号缺口 %s" % g)
+            print(f"    !! 条号缺口 {g}")
         for k in ("ch", "se", "cl", "ku", "xi"):
             total[k] += r[k]
         total["issues"] += len(r["issues"])
         total["gaps"] += len(r["gaps"])
     if not found:
-        print("未找到 .md 文件：%s" % ", ".join(targets))
+        print(f"未找到 .md 文件：{', '.join(targets)}")
         return 1
     print("=" * 62)
-    print("合计  章 %d  节 %d  条 %d  款 %d  项 %d    标记异常 %d  条号缺口 %d"
-          % (total["ch"], total["se"], total["cl"], total["ku"], total["xi"],
-             total["issues"], total["gaps"]))
+    print(
+        f"合计  章 {total['ch']}  节 {total['se']}  条 {total['cl']}  款 {total['ku']}"
+        f"  项 {total['xi']}    标记异常 {total['issues']}  条号缺口 {total['gaps']}"
+    )
     return 0 if total["issues"] == 0 and total["gaps"] == 0 else 2
 
 

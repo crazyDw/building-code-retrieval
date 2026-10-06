@@ -68,9 +68,9 @@ def main(argv):
         checked += 1
         if missing:
             problems += len(missing)
-            print("!! %s 未登记: %s" % (readme, "、".join(missing)))
+            print(f"!! {readme} 未登记: {'、'.join(missing)}")
     print("=" * 60)
-    print("检查 %d 个 README，未登记 %d 个文件" % (checked, problems))
+    print(f"检查 {checked} 个 README，未登记 {problems} 个文件")
     return 1 if problems else 0
 
 

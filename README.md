@@ -4,11 +4,11 @@
 
 **允许条件性推导，禁止下合规结论。**
 
-> 当前处于骨架阶段：harness 层（目录、文档、技能、配置）已就位，`project/` 下的业务代码尚未实现。
+> M0–M8 已全部完成：语料解析/切块入库/Milvus 索引/检索（Recall@5 99.86%）/生成/API/前端均已就位，端到端验收、降级与备份恢复演练、runbook 已交付；`LICENSE` 已署名 github.com/crazyDw。
 
 ## 语料
 
-`数据库上传资料/` 下 5 份全文强制性规范 Markdown，共 **33 章 / 91 节 / 554 条 / 438 款 / 7 项**。新增或更新语料后，先跑 `normalize-regulation-md` 技能普查结构。
+`数据库上传资料/` 下 5 份全文强制性规范 Markdown，共 **33 章 / 91 节 / 554 条 / 436 款 / 7 项**。新增或更新语料后，先跑 `normalize-regulation-md` 技能普查结构。
 
 ## 快速开始
 
@@ -42,6 +42,23 @@ python -c "import torch; print(torch.__version__, torch.version.cuda, torch.cuda
 ## 开发模式
 
 `DEV_MODE=true` 跳过模型加载与预热，改用 `_dev` 后缀的 SQLite 文件与 Milvus collection，语料仅入库《民用建筑通用规范》。**开发模式的结果不得作为检索质量依据。**
+
+## 启动服务
+
+```powershell
+# 前端构建（产物由 FastAPI 挂载到 /）
+cd project/frontend
+npm install
+npm run build
+cd ../..
+
+# 启动 API；模型常驻必须 workers=1，DEV_MODE=true 可跳过模型
+uvicorn archrag.api.app:app --host 127.0.0.1 --port 8000 --workers 1
+```
+
+开发期前端热更新：`cd project/frontend; npm run dev`（Vite 将 `/api` 代理到 8000）。
+
+运维手册（启动、自启、入库、词表、备份、排障、复盘）见 `docs/runbooks/`；验收证据见 `data/acceptance/`。
 
 ## 文档入口
 

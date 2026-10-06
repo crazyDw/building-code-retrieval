@@ -7,6 +7,10 @@ dist/
 .venv/
 venv/
 
+# ── Node / 前端 ──
+node_modules/
+.vite/
+
 # ── 工具缓存 ──
 .pytest_cache/
 .mypy_cache/

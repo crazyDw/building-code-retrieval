@@ -86,7 +86,7 @@ def rewrite(line, action):
         return "# " + m.group(2)
     if action == "h2":
         return "## " + m.group(2)
-    raise AssertionError("未知动作 %s" % action)
+    raise AssertionError(f"未知动作 {action}")
 
 
 def main(argv):
@@ -95,35 +95,36 @@ def main(argv):
 
     changed_files = total_lines = 0
     for path in iter_files(targets):
-        raw = open(path, encoding="utf-8", newline="").read()
+        with open(path, encoding="utf-8", newline="") as handle:
+            raw = handle.read()
         sep = "\r\n" if "\r\n" in raw else "\n"
         lines = raw.split(sep)
         plan = build_plan(lines)
         print("=" * 62)
-        print("%s   待改 %d 行" % (os.path.basename(path), len(plan)))
+        print(f"{os.path.basename(path)}   待改 {len(plan)} 行")
         if not plan:
             continue
         for ln, action, line, why in plan:
-            print("  L%-5d %s" % (ln, why))
-            print("        %s" % line[:60])
-            print("     -> %s" % rewrite(line, action)[:60])
+            print(f"  L{ln:<5d} {why}")
+            print(f"        {line[:60]}")
+            print(f"     -> {rewrite(line, action)[:60]}")
         if apply:
             try:
                 newlines = list(lines)
                 for ln, action, _, _ in plan:
                     newlines[ln - 1] = rewrite(lines[ln - 1], action)
             except AssertionError as exc:
-                print("  !! 断言失败（%s），该文件未写入" % exc)
+                print(f"  !! 断言失败（{exc}），该文件未写入")
                 continue
-            open(path, "w", encoding="utf-8", newline="").write(sep.join(newlines))
-            print("  已写入 %d 行" % len(plan))
+            with open(path, "w", encoding="utf-8", newline="") as handle:
+                handle.write(sep.join(newlines))
+            print(f"  已写入 {len(plan)} 行")
         changed_files += 1
         total_lines += len(plan)
 
     print("=" * 62)
-    print("%s：%d 个文件、%d 行"
-          % ("已应用" if apply else "试运行（未写入，加 --apply 落盘）",
-             changed_files, total_lines))
+    mode = "已应用" if apply else "试运行（未写入，加 --apply 落盘）"
+    print(f"{mode}：{changed_files} 个文件、{total_lines} 行")
     return 0
 
 

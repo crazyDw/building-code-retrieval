@@ -31,3 +31,8 @@ ignore_missing_imports = true
 testpaths = ["project/tests"]
 pythonpath = ["project/src"]
 addopts = "-q"
+markers = [
+    "milvus: 需要本地 Milvus，未启动时 skip",
+    "gpu: 需要 CUDA，不可用时 skip",
+    "api_live: 真实 DeepSeek API，默认不跑",
+]
